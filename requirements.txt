@@ -1,0 +1,10 @@
+python-dotenv
+langchain
+langchain-openai
+langchain-aws
+langchain_google_genai
+langchain_community
+beautifulsoup4
+langchain-chroma
+fastapi
+pydantic
