@@ -1,9 +1,9 @@
 # jarvismind-llm-api
 This repo contains a python app that exposes an API for autosuggesting CLI commands using Langframe LLM integrations.
 
-# Setup Instructions
+## Setup Instructions
 1. Clone the repository into your local machine
-2. Open the repository into your favourite editor
+2. Open the repository in your favourite editor
 3. Install the required dependencies by running listed in `requirements.txt` by running `pip install -r requirements.txt`.
 4. Create a `.env` file and add the required credentials and secrets there like AZURE_OPENAI_ENDPOINT, OPENAI_API_VERSION etc
 5. Run the app : `uvicorn main:app --reload`
@@ -14,3 +14,6 @@ This repo contains a python app that exposes an API for autosuggesting CLI comma
     --data-raw '{
     "input_str": "deploy app"
     }'`
+   
+## Contributing
+Contributions to this repository are welcome! If you have suggestions for improvements or new features, feel free to open an issue or submit a pull request.
