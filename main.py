@@ -44,12 +44,28 @@ def format_docs(docs):
 # Set up the RAG chain for retrieving and generating answers.
 retriever = vectorstore.as_retriever()
 system_prompt = ("""
-You are an AIO CLI command assistant. Use the following pieces of retrieved context to answer the question. Your task as a CLI Assistant is to map user prompt to the closest 2 commands in context and output only relevant mapped commands and brief description in the json format. Do not output any command that is not in the context.
+You are an AIO CLI command assistant. Use the following pieces of retrieved context to answer the question. Your task as a CLI Assistant is to map user prompt to the closest 2 commands in context. Output only relevant mapped commands and brief description in json schema. Do not output any command that is not in the context.
 Context: {context}
 """)    
 
 # Initialize the model with our deployment of Azure OpenAI
 model = AzureChatOpenAI(azure_deployment=os.environ["AZURE_OPENAI_DEPLOYMENT"])
+
+import json
+import re
+
+def extract_json_from_string(input_string):
+    # Use regular expressions to find the JSON part of the string
+    json_match = re.search(r'```json\n(.+)\n```', input_string, re.DOTALL)
+    
+    if json_match:
+        json_string = json_match.group(1)
+        # Parse the JSON string
+        json_data = json.loads(json_string)
+        return json_data
+    else:
+        raise ValueError("No JSON found in the input string")
+
 
 @app.post("/suggestaiocommand")
 async def suggestCommand(request: SuggestionRequest):
@@ -71,7 +87,7 @@ async def suggestCommand(request: SuggestionRequest):
 
     # Let's pass the system and human message to the RAG API and invoke it
     rag_output = rag_chain.invoke(request.input_str)
-    return {"output": rag_output}
+    return extract_json_from_string(rag_output)
 
 
 # Run the server with uvicorn
