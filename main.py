@@ -44,7 +44,21 @@ def format_docs(docs):
 # Set up the RAG chain for retrieving and generating answers.
 retriever = vectorstore.as_retriever()
 system_prompt = ("""
-You are an AIO CLI command assistant. Use the following pieces of retrieved context to answer the question. Your task as a CLI Assistant is to map user prompt to the closest 2 commands in context. Output only relevant mapped commands and brief description in json schema. Do not output any command that is not in the context.
+You are an AIO CLI command assistant. Use the following pieces of retrieved context to answer the question. Your task as a CLI Assistant is to map the user prompt to the closest 2 commands in the context. Output only the relevant mapped commands and brief descriptions in the following JSON schema:
+
+    'commands': [
+        
+            'command': 'command1',
+            'description': 'description1'
+        ,
+        
+            'command': 'command2',
+            'description': 'description2'
+        
+    ]
+
+
+Do not output any command that is not in the context.
 Context: {context}
 """)    
 
@@ -87,6 +101,7 @@ async def suggestCommand(request: SuggestionRequest):
 
     # Let's pass the system and human message to the RAG API and invoke it
     rag_output = rag_chain.invoke(request.input_str)
+    #return rag_output
     return extract_json_from_string(rag_output)
 
 
